@@ -1,7 +1,7 @@
 """Streamfields live in here"""
 
 from wagtail.core import blocks
-
+from wagtail.images.blocks import ImageChooserBlock
 
 class TitleAndTextBlock(blocks.StructBlock):
     """ Title and text and noting else """
@@ -13,6 +13,29 @@ class TitleAndTextBlock(blocks.StructBlock):
         template = "streams/title_and_block.html"
         icon = "edit"
         label = "Title & Text"
+
+
+class CardBlock(blocks.StructBlock):
+    """Cards with image and text and buttons"""
+
+    title = blocks.CharBlock(required=True, help_text="Add your title")
+    
+    cards = blocks.ListBlock(
+        blocks.StructBlock(
+            [
+                ("image", ImageChooserBlock(required=True)),
+                ("title", blocks.CharBlock(required=True, max_length=50)),
+                ("text", blocks.CharBlock(required=True, max_length=240)),
+                ("button_page", blocks.PageChooserBlock(required=False)),
+                ("button_url", blocks.URLBlock(required=False)),
+            ]
+        )
+    )
+
+    class Meta: 
+        template = "streams/card_block.html"
+        icon = "doc-full"
+        label = "Gallery"
 
 
 class RichtextBlock(blocks.RichTextBlock):
