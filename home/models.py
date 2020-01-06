@@ -3,6 +3,7 @@ from django.db import models
 from modelcluster.fields import ParentalKey
 
 from wagtail.admin.edit_handlers import FieldPanel, PageChooserPanel, StreamFieldPanel, InlinePanel, MultiFieldPanel
+from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.core.models import Page, Orderable
 from wagtail.core.fields import RichTextField, StreamField
 from wagtail.images.edit_handlers import ImageChooserPanel
@@ -27,7 +28,7 @@ class HomePageCarouselImages(Orderable):
     ]
 
 
-class HomePage(Page):
+class HomePage(RoutablePageMixin, Page):
     max_count = 1
     template = "home/home_page.html"
     
@@ -73,3 +74,8 @@ class HomePage(Page):
     class Meta:
         verbose_name = "Home Page"
         verbose_name_plural = "Home Pages"
+
+    @route(r'^$')
+    def the_subscribe_page(self, request, *arg, **kwargs):
+        pass
+    
