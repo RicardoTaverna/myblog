@@ -1,6 +1,3 @@
 # ignorar ambientes virtuais
 \venv
 /venv
-
-# banco de dados local
-/db.sqlite3
