@@ -1,4 +1,5 @@
 from django.db import models
+from django.shortcuts import render
 
 from modelcluster.fields import ParentalKey
 
@@ -75,7 +76,10 @@ class HomePage(RoutablePageMixin, Page):
         verbose_name = "Home Page"
         verbose_name_plural = "Home Pages"
 
-    @route(r'^$')
-    def the_subscribe_page(self, request, *arg, **kwargs):
+    @route(r'^subscribe/')
+    def the_subscribe_page(self, request, *args, **kwargs):
+        context = self.get_context(request, *args, **kwargs)
+        context['a_special_test'] = "Hello word 123455"
+        return render(request, "home/subscribe.html", context)
         pass
     
