@@ -77,3 +77,14 @@ class CTABlock(blocks.StructBlock):
         template = "streams/cta_block.html"
         icon = "placeholder"
         label = "Call to Action"
+
+class ButtonBlock(blocks.StructBlock):
+    """ An external or internal URL """
+
+    button_page = blocks.PageChooserBlock(required=False, help_text='If selected, this url will be used first.')
+    button_url = blocks.URLBlock(required=False,  help_text='If added, this url will used secondarily to the button page.')
+
+    class Meta:
+            template = "streams/button_block.html"
+            icon = "placeholder"
+            label = "Single Button"
