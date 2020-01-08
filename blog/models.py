@@ -1,3 +1,4 @@
+from django import forms
 from django.db import models
 from django.shortcuts import render
 
@@ -9,7 +10,7 @@ from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.snippets.models import register_snippet
 from wagtail.snippets.edit_handlers import SnippetChooserPanel
 
-from modelcluster.fields import ParentalKey
+from modelcluster.fields import ParentalKey, ParentalManyToManyField
 
 from streams import blocks
 
@@ -64,6 +65,35 @@ class BlogAuthor(models.Model):
         verbose_name_plural = "Blog Authors"
 
 register_snippet(BlogAuthor)
+
+
+class BlogCategory(models.Model):
+    """Blog category for a snippet"""
+
+    name = models.CharField(max_length=255)
+    slug = models.SlugField(
+        verbose_name="slug",
+        allow_unicode=True,
+        max_length=255,
+        help_text='A slug to identify posts by this category',
+    )
+
+    panels = [
+        FieldPanel("name"),
+        FieldPanel("slug"),
+    ]
+    
+    class Meta:
+        verbose_name = "Blog Category"
+        verbose_name_plural = "Blog Categories"
+        ordering = ["name"]
+
+    def __str__(self):
+        return self.name
+    
+
+register_snippet(BlogCategory)
+
 
 class BlogListingPage(RoutablePageMixin, Page):
     """Listing page lists all the Blog detail Pages"""
@@ -120,6 +150,8 @@ class BlogDetailPage(Page):
         on_delete=models.SET_NULL
     )
 
+    categories = ParentalManyToManyField("blog.BlogCategory", blank=True)
+
     content = StreamField(
         [
             ("title_and_text", blocks.TitleAndTextBlock()),
@@ -140,6 +172,12 @@ class BlogDetailPage(Page):
                 InlinePanel("blog_authors", label="Author", min_num=1, max_num=4)
             ],
             heading="Author(s)"
+        ),
+        MultiFieldPanel(
+            [
+            FieldPanel("categories", widget=forms.CheckboxSelectMultiple())
+            ],
+            heading="Categories"
         ),
         StreamFieldPanel("content"),
     ]
