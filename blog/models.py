@@ -1,15 +1,54 @@
 from django.db import models
 from django.shortcuts import render
 
-from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel
+from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel, MultiFieldPanel
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.core.models import Page
 from wagtail.core.fields import StreamField
 from wagtail.images.edit_handlers import ImageChooserPanel
+from wagtail.snippets.models import register_snippet
+
 
 from streams import blocks
 
-# Create your models here.
+
+class BlogAuthor(models.Model):
+    """Blog author for snippts."""
+
+    name = models.CharField(max_length=100)
+    website = models.URLField(blank=True, null=True)
+    image = models.ForeignKey(
+        "wagtailimages.Image",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=False,
+        related_name="+",
+    )
+
+    panels = [
+        MultiFieldPanel(
+            [
+                FieldPanel("name"),
+                ImageChooserPanel("image"),
+            ],
+            heading="Name and Image"
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel("website"),
+            ],
+            heading="Links"
+        ),
+    ]
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "Blog Author"
+        verbose_name_plural = "Blog Authors"
+
+register_snippet(BlogAuthor)
 
 class BlogListingPage(RoutablePageMixin, Page):
     """Listing page lists all the Blog detail Pages"""
@@ -30,6 +69,7 @@ class BlogListingPage(RoutablePageMixin, Page):
     def get_context(self, request, *args, **kwargs):
         context = super().get_context(request, *args, **kwargs)
         context["posts"] = BlogDetailPage.objects.live().public()
+        context["authors"] = BlogAuthor.objects.all()
         return context
 
     @route(r'^latest/$', name="latest_posts")
