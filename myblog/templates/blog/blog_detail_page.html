@@ -10,25 +10,46 @@
     <div class="container">
         <div class="text-center">
            <h1 class="mt-5 mb-5"> {{ self.custom_title }} </h1>
-        </div>
-        {# Loop through all blog authors #}
-        {% for iter in self.blog_authors.all %}
-            {% image iter.author.image fill-50x50 as img %}
-            <div>
-                <img src="{{ img.url }}" class="rounded-circle" alt="{{ iter.author.name }}">
-            </div>
-            {% if iter.author.website %}
-                {# If there's a website, create an <a> tag #}
-                <a href="{{ iter.author.website }}">
-                    {{ iter.author.name }}
-                </a>
-            {% else %}
-                {# No website; no <a> tag #}
-                {{ iter.author.name }}
+           {% if self.categories.count %}
+                <div style="padding: 0 20px 20px">
+                    {% for cat in self.categories.all %}
+                        <a href="?category={{ cat.slug }}">
+                            {{ cat.name }}
+                        </a>{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                    </div>
             {% endif %}
-            </div>
-        {% endfor %}
+        
+            {# Loop through all blog authors #}
+            {% for iter in self.blog_authors.all %}
+                {% image iter.author.image fill-50x50 as img %}
+                <div>
+                    <img src="{{ img.url }}" class="rounded-circle" alt="{{ iter.author.name }}">
+                </div>
+                {% if iter.author.website %}
+                    {# If there's a website, create an <a> tag #}
+                    <a href="{{ iter.author.website }}">
+                        {{ iter.author.name }}
+                    </a>
+                {% else %}
+                    {# No website; no <a> tag #}
+                    {{ iter.author.name }}
+                {% endif %}
+                </div>
+            {% endfor %}
+        </div>
     </div>
+
+    <h2>Categories</h2>
+    <ul>
+        {% for cat in self.categories.all %}
+            <li>
+                <a href="{{ self.get_parent.url }}?category={{ cat.slug }}">
+                    {{ cat.name }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
 
     <div class="container">
         <div class="row">
