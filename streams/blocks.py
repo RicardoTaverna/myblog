@@ -78,6 +78,22 @@ class CTABlock(blocks.StructBlock):
         icon = "placeholder"
         label = "Call to Action"
 
+
+class LinkStructValue(blocks.StructValue):
+    """Aditional logic for the urls"""
+
+    def url(self):
+        button_page = self.get('button_page')
+        button_url = self.get('button_url')
+        if button_page:
+            return button_page.url
+        elif button_url:
+            return button_url
+        
+        return None
+        
+
+
 class ButtonBlock(blocks.StructBlock):
     """ An external or internal URL """
 
@@ -88,3 +104,4 @@ class ButtonBlock(blocks.StructBlock):
             template = "streams/button_block.html"
             icon = "placeholder"
             label = "Single Button"
+            value_class = LinkStructValue
