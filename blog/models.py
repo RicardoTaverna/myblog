@@ -115,6 +115,7 @@ class BlogListingPage(RoutablePageMixin, Page):
         context = super().get_context(request, *args, **kwargs)
         context["posts"] = BlogDetailPage.objects.live().public()
         context["authors"] = BlogAuthor.objects.all()
+        context["categories"] = BlogCategory.objects.all()
         return context
 
     @route(r'^latest/$', name="latest_posts")
