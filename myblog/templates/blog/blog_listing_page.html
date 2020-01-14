@@ -31,6 +31,10 @@
             <div class="col-sm-9">
                 <a href="{{ post.url }}">
                     <h2>{{ post.custom_title }}</2>
+                    {% if post.subtitle %}
+                        <p>{{ post.subtitle }}</p>
+                    {% endif %}
+
                     {# @todo add a sumary field to BlogDetailPage; #}
                     <a href="{{ post.url }}" class="btn btn-primary mt-4">Read More</a>
                 </a>
