@@ -10,19 +10,36 @@ from wagtail.core.models import Orderable
 from wagtail.snippets.models import register_snippet
 
 class MenuItem(Orderable):
-     link_title = models.CharField(max_length=50, blank=True, null=True)
-     link_url = models.CharField(max_length=500, blank=True)
-     link_page = models.ForeignKey("wagtailcore.Page", null=True, blank=True, related_name="+", on_delete=models.CASCADE)
-     open_in_new_tab = models.BooleanField(default=False, blank=True)
+    link_title = models.CharField(max_length=50, blank=True, null=True)
+    link_url = models.CharField(max_length=500, blank=True)
+    link_page = models.ForeignKey("wagtailcore.Page", null=True, blank=True, related_name="+", on_delete=models.CASCADE)
+    open_in_new_tab = models.BooleanField(default=False, blank=True)
 
-     page = ParentalKey("Menu", related_name="menu_items")
+    page = ParentalKey("Menu", related_name="menu_items")
 
-     panel = [
-         FieldPanel("link_title"),
-         FieldPanel("link_url"),
-         PageChooserPanel("link_page"),
-         FieldPanel("open_in_new_tab")
-     ]
+    panel = [
+        FieldPanel("link_title"),
+        FieldPanel("link_url"),
+        PageChooserPanel("link_page"),
+        FieldPanel("open_in_new_tab")
+    ]
+
+    @property
+    def link(self):
+        if self.link_page:
+            return self.link_page.url
+        elif self.link_url:
+            return self.link_url
+        return '#'
+    
+    @property
+    def title(self):
+        if self.link_page and not self.link_title:
+            return self.link_page.title
+        elif self.link_title:
+            return self.link_title
+        return 'Missing Title'
+
 
     
 
