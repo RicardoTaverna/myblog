@@ -1,0 +1,2 @@
+site key    6Ldp-NAUAAAAAOfG7_uauT3IWWHxiQnIB5Cny_-8
+secret key  6Ldp-NAUAAAAABzq-y9LOXM3euiI0p-Lw2PMbSn7

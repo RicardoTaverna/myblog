@@ -10,9 +10,12 @@
 
     <form action="{% pageurl page %}" method="POST">
         {% csrf_token %}
-        {{ form.as_ul }}
-
-        <input type="submit">
+        <div class="form-group">
+            {{ form.as_p }}
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Enviar</button>
+        
     </form>
 
 {% endblock %}
